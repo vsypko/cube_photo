@@ -1,0 +1,18 @@
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
+.aria {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 370px;
+  height: 370px;
+  background: linear-gradient(#025169, #010408); 
+  -webkit-box-shadow: 5px 5px 10px 1px #025169;
+  box-shadow: 1px 10px 20px 1px #101010;
+  border-radius: 15px;
+  
+}
+

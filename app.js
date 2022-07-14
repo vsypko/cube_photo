@@ -171,8 +171,8 @@ const webGLStart = () => {
     gl.uniformMatrix4fv(uniformLocations.matrix, false, mvpMatrix)
     gl.uniformMatrix4fv(uniformLocations.normalMatrix, false, normalMatrix)
 
-    gl.clearColor(0.2, 0.4, 0.55, 1)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    // gl.clearColor(0.2, 0.4, 0.55, 1)
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.drawArrays(gl.TRIANGLES, 0, vertexData.length / 3)
   }
 
