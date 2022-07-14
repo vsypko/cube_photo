@@ -142,7 +142,7 @@ const webGLStart = () => {
   const projectionMatrix = mat4.create()
   mat4.perspective(
     projectionMatrix,
-    (75 * Math.PI) / 180,
+    (75 * Math.PI) / 360,
     canvas.width / canvas.height,
     0.001,
     1000
@@ -152,7 +152,7 @@ const webGLStart = () => {
   const normalMatrix = mat4.create()
 
   mat4.translate(modelMatrix, modelMatrix, [0, 0.1, 0.1])
-  mat4.translate(viewMatrix, viewMatrix, [0, 0.1, 1.5])
+  mat4.translate(viewMatrix, viewMatrix, [0, 0.1, 2.7])
   mat4.invert(viewMatrix, viewMatrix)
   // mat4.scale(modelMatrix, modelMatrix, [0.9, 0.9, 0.9])
 

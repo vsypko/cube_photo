@@ -16,7 +16,7 @@ uniform mat4 normalMatrix;
 void main() {
   vec3 worldNormal = (normalMatrix * vec4(normal, 1.0)).xyz;
   float diffuse = max(0.0, dot(worldNormal, lightDirection));
-  vBrightness = diffuse + 0.2;
+  vBrightness = diffuse + 0.15;
   vUV = uv;
   gl_Position = matrix * vec4(position, 1);
 }
