@@ -1,4 +1,4 @@
-import { VSHADER_SOURCE, FSHADER_SOURCE } from "./shaders3.js"
+import { VSHADER_SOURCE, FSHADER_SOURCE } from "./shaders.js"
 
 const vertexData = [
   // Front
@@ -33,6 +33,15 @@ const uvData = repeat(
     1, 0, 0, 1, 1, 1,
   ]
 )
+
+const normalData = [
+  ...repeat(6, [0, 0, 1]),
+  ...repeat(6, [-1, 0, 0]),
+  ...repeat(6, [0, 0, -1]),
+  ...repeat(6, [1, 0, 0]),
+  ...repeat(6, [0, 1, 0]),
+  ...repeat(6, [0, -1, 0]),
+]
 //TEXTURE LOADER==========================================================
 const loadTexture = (gl, url) => {
   const texture = gl.createTexture()
@@ -88,6 +97,7 @@ const initShaders = (gl, program) => {
 
   createBuffer(gl, vertexData, "position", program, 3)
   createBuffer(gl, uvData, "uv", program, 2)
+  createBuffer(gl, normalData, "normal", program, 3)
 
   gl.useProgram(program)
   gl.enable(gl.DEPTH_TEST)
@@ -120,6 +130,7 @@ const webGLStart = () => {
 
   const uniformLocations = {
     matrix: gl.getUniformLocation(shaderProgram, "matrix"),
+    normalMatrix: gl.getUniformLocation(shaderProgram, "normalMatrix"),
     textureID: gl.getUniformLocation(shaderProgram, "textureID"),
   }
 
@@ -138,6 +149,7 @@ const webGLStart = () => {
   )
   const mvMatrix = mat4.create()
   const mvpMatrix = mat4.create()
+  const normalMatrix = mat4.create()
 
   mat4.translate(modelMatrix, modelMatrix, [0, 0.1, 0.1])
   mat4.translate(viewMatrix, viewMatrix, [0, 0.1, 1.5])
@@ -153,7 +165,11 @@ const webGLStart = () => {
     mat4.multiply(mvMatrix, viewMatrix, modelMatrix)
     mat4.multiply(mvpMatrix, projectionMatrix, mvMatrix)
 
+    mat4.invert(normalMatrix, mvMatrix)
+    mat4.transpose(normalMatrix, normalMatrix)
+
     gl.uniformMatrix4fv(uniformLocations.matrix, false, mvpMatrix)
+    gl.uniformMatrix4fv(uniformLocations.normalMatrix, false, normalMatrix)
 
     gl.clearColor(0.2, 0.4, 0.55, 1)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
