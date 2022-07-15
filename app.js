@@ -122,7 +122,7 @@ const webGLStart = () => {
 
   //TEXTURES===========================================================
 
-  const textureImg = loadTexture(gl, "./Sanya.jpeg")
+  const textureImg = loadTexture(gl, "./cube_texture1.png")
   gl.activeTexture(gl.TEXTURE0)
   gl.bindTexture(gl.TEXTURE_2D, textureImg)
 
