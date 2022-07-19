@@ -1,6 +1,8 @@
 import { VSHADER_SOURCE, FSHADER_SOURCE } from "./shaders.js"
 
 let loaded = false
+let animationActive = true
+let prevX, prevY, dx, dy
 
 const vertexData = [
   // Front
@@ -160,21 +162,16 @@ const drawScene = (
   projectionMatrix,
   normalMatrix,
   uniformLocations,
-  texture,
-  animationActive,
-  dx,
-  dy
+  texture
 ) => {
   gl.activeTexture(gl.TEXTURE0)
   gl.bindTexture(gl.TEXTURE_2D, texture)
 
   if (!animationActive) {
-    mat4.rotateX(modelMatrix, modelMatrix, Math.atan(dy / 50))
-    mat4.rotateY(modelMatrix, modelMatrix, Math.atan(dx / 50))
+    mat4.rotateX(modelMatrix, modelMatrix, Math.atan(-dy))
+    mat4.rotateY(modelMatrix, modelMatrix, Math.atan(dx))
     dx = 0
     dy = 0
-    // mat4.rotateY(modelMatrix, modelMatrix, Math.atan2(dy, dx) / 90)
-    // console.log(dx, dy)
   } else {
     mat4.rotate(modelMatrix, modelMatrix, Math.PI / -500, [1, 0, 1])
   }
@@ -253,19 +250,13 @@ const webGLStart = () => {
   mat4.translate(viewMatrix, viewMatrix, [0, 0.1, 2.7])
   mat4.invert(viewMatrix, viewMatrix)
   // mat4.scale(modelMatrix, modelMatrix, [0.9, 0.9, 0.9])
-  let animationActive = true
-
-  let rec = canvas.getBoundingClientRect()
-
-  let prevX, prevY, dx, dy
 
   canvas.onpointerdown = (e) => {
     e.preventDefault()
     if (e.isPrimary) {
       animationActive = false
-      prevX = e.clientX - rec.left
-      prevY = e.clientY - rec.top
-      console.log(prevX, prevY)
+      prevX = (e.clientX * 2) / gl.canvas.width - 1
+      prevY = 1 - (e.clientY * 2) / gl.canvas.height
       dx = 0
       dy = 0
     }
@@ -274,29 +265,21 @@ const webGLStart = () => {
     e.preventDefault()
     if (e.isPrimary) {
       animationActive = true
-      prevX = 0
-      prevY = 0
-      dx = 0
-      dx = 0
     }
   }
   canvas.onpointerout = (e) => {
     e.preventDefault()
     if (e.isPrimary) {
       animationActive = true
-      prevX = 0
-      prevY = 0
-      dx = 0
-      dy = 0
     }
   }
   canvas.onpointermove = (e) => {
     e.preventDefault()
     if (!animationActive) {
-      dx = e.clientX - prevX
-      dy = e.clientY - prevY
-      prevX = e.clientX
-      prevY = e.clientY
+      dx = (e.clientX * 2) / gl.canvas.width - 1 - prevX
+      dy = 1 - (2 * e.clientY) / gl.canvas.height - prevY
+      prevX += dx
+      prevY += dy
     }
   }
 
@@ -321,10 +304,7 @@ const webGLStart = () => {
       projectionMatrix,
       normalMatrix,
       uniformLocations,
-      texture,
-      animationActive,
-      dx,
-      dy
+      texture
     )
 
     requestAnimationFrame(render)
